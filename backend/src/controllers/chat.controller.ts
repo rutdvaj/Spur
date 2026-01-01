@@ -49,13 +49,13 @@ export const postMessage = async (req: Request, res: Response) => {
       take: HISTORY_LIMIT
     });
 
-    const history: HistoryMessage[] = previousMessages.map((m) => ({
+    const history: HistoryMessage[] = previousMessages.map((m: any) => ({
       role: m.sender === "user" ? "user" : "assistant",
       content: m.text
     }));
 
-    // --- Generate AI reply ---
-    const reply = await generateReply(history, message.trim());
+    // --- Generate AI reply (pass only history, which includes the current message) ---
+    const reply = await generateReply(history);
 
     // --- Save AI reply ---
     await prisma.message.create({
