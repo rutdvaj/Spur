@@ -84,7 +84,7 @@ function MessageBubble({ message }: { message: Message }) {
             : "bg-card text-card-foreground border border-border rounded-bl-sm"
         )}
       >
-        <p className="text-sm whitespace-pre-wrap break-words leading-relaxed">
+        <p className="text-sm whitespace-pre-wrap wrap-break-word leading-relaxed">
           {message.text}
         </p>
         <span className="text-xs opacity-60 mt-1 block">
@@ -206,14 +206,13 @@ function MessageList({
           variant="secondary"
           onClick={scrollToTop}
           className="absolute right-4 bottom-4 z-10 rounded-full shadow-md"
-          title="Scroll to top"
         >
           <ArrowUp className="h-4 w-4" />
         </Button>
       )}
 
       <ScrollArea ref={scrollRef} className="h-full p-4 bg-muted/30">
-        {messages.map((m) => (
+        {messages.map((m: any) => (
           <MessageBubble key={m.id} message={m} />
         ))}
         {isTyping && <TypingIndicator />}
@@ -231,7 +230,6 @@ function ChatContainer() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Load conversation from localStorage
   useEffect(() => {
     const storedMessages = localStorage.getItem("chatMessages");
     if (storedMessages) {
@@ -244,9 +242,7 @@ function ChatContainer() {
     }
 
     const storedSessionId = localStorage.getItem("sessionId");
-    if (storedSessionId) {
-      setSessionId(storedSessionId);
-    }
+    if (storedSessionId) setSessionId(storedSessionId);
 
     const storedTheme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia(
@@ -293,7 +289,6 @@ function ChatContainer() {
         sessionId: sessionId || undefined,
       });
 
-      // Save the session ID
       if (res.sessionId && !sessionId) {
         setSessionId(res.sessionId);
         localStorage.setItem("sessionId", res.sessionId);
@@ -320,17 +315,9 @@ function ChatContainer() {
   return (
     <Card className="w-full h-full flex flex-col overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground">
+        <span className="font-semibold">Support Assistant</span>
         <div className="flex items-center gap-2">
-          <span className="font-semibold">Support Assistant</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={startNewConversation}
-            className="text-primary-foreground hover:bg-primary-foreground/10"
-            title="Start new conversation"
-          >
+          <Button variant="ghost" size="sm" onClick={startNewConversation}>
             <MessageSquarePlus className="h-4 w-4 mr-2" />
             New Chat
           </Button>
@@ -343,16 +330,10 @@ function ChatContainer() {
                 "_blank"
               )
             }
-            className="text-primary-foreground hover:bg-primary-foreground/10 relative group"
-            title="Visit our website"
           >
-            <Sparkles className="h-4 w-4 mr-2 animate-pulse" />
-            <span className="hidden sm:inline">Visit Site</span>
+            <Sparkles className="h-4 w-4 mr-2" />
+            Visit Site
             <ExternalLink className="h-3 w-3 ml-1 opacity-60" />
-            <span className="absolute -top-1 -right-1 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-foreground/40 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-primary-foreground/60"></span>
-            </span>
           </Button>
           <ThemeToggle isDark={isDarkMode} onToggle={toggleTheme} />
         </div>
