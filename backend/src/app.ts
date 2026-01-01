@@ -7,8 +7,11 @@ const app = express();
 // ✅ CORS first (frontend runs on 3000)
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    origin: [
+      "http://localhost:3000",
+      "https://spur-eta.vercel.app"
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
   })
 );
 
